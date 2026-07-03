@@ -1,0 +1,34 @@
+[
+    {
+        "roll_number": "25B11AI570",
+        "name": "Loki",
+        "branch": "AIML",
+        "year": "2",
+        "cgpa": 10.0,
+        "email": "loki@gmail.com",
+        "fees_paid": 70000.0,
+        "total_fees": 70000.0,
+        "attendance": 90.0,
+        "marks": {
+            "math": "100",
+            "science": "100",
+            "english": "99"
+        }
+    },
+    {
+        "roll_number": "25B11AI571",
+        "name": "Harry",
+        "branch": "CSE",
+        "year": "3",
+        "cgpa": 9.8,
+        "email": "harry@gmail.com",
+        "fees_paid": 80000.0,
+        "total_fees": 90000.0,
+        "attendance": 89.0,
+        "marks": {
+            "math": "89",
+            "science": "99",
+            "english": "77"
+        }
+    }
+]

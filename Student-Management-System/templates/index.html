@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1>College Management System</h1>
+            <button id="addStudentBtn" class="btn primary-btn">+ Add Student</button>
+        </header>
+        
+        <main>
+            <div class="dashboard-grid">
+                <div class="dash-card">
+                    <h4>Total Students</h4>
+                    <p id="dashTotal">0</p>
+                </div>
+                <div class="dash-card">
+                    <h4>Average CGPA</h4>
+                    <p id="dashCGPA">0.0</p>
+                </div>
+                <div class="dash-card">
+                    <h4>Fees Pending</h4>
+                    <p>₹<span id="dashFees">0</span></p>
+                </div>
+                <div class="dash-card">
+                    <h4>Avg Attendance</h4>
+                    <p><span id="dashAttendance">0</span>%</p>
+                </div>
+            </div>
+
+            <div class="filter-container">
+                <input type="text" id="searchInput" placeholder="Search by Roll Number or Name...">
+                <select id="branchFilter">
+                    <option value="">All Branches</option>
+                    <option value="AIML">AIML</option>
+                    <option value="CSE">CSE</option>
+                    <option value="ECE">ECE</option>
+                    <option value="EEE">EEE</option>
+                    <option value="MECH">MECH</option>
+                </select>
+            </div>
+
+            <div class="table-container">
+                <table id="studentsTable">
+                    <thead>
+                        <tr>
+                            <th>Roll Number</th>
+                            <th>Name</th>
+                            <th>Branch</th>
+                            <th>Year</th>
+                            <th>CGPA</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentsBody">
+                        <!-- Student rows will be injected here via JS -->
+                    </tbody>
+                </table>
+                <div id="emptyState" class="empty-state hidden">
+                    <p>No students found. Add one to get started!</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal for Add/Edit -->
+    <div id="studentModal" class="modal hidden">
+        <div class="modal-content">
+            <h2 id="modalTitle">Add Student</h2>
+            <form id="studentForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="roll_number">Roll Number</label>
+                        <input type="text" id="roll_number" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="branch">Branch</label>
+                        <select id="branch" required>
+                            <option value="">Select Branch</option>
+                            <option value="AIML">AIML</option>
+                            <option value="CSE">CSE</option>
+                            <option value="ECE">ECE</option>
+                            <option value="EEE">EEE</option>
+                            <option value="MECH">MECH</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="year">Year</label>
+                        <input type="text" id="year" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cgpa">CGPA (0.0 - 10.0)</label>
+                        <input type="number" step="0.1" min="0" max="10" id="cgpa" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="attendance">Attendance (%)</label>
+                        <input type="number" step="0.1" min="0" max="100" id="attendance">
+                    </div>
+                    <div class="form-group">
+                        <label for="total_fees">Total Fees</label>
+                        <input type="number" step="1" min="0" id="total_fees">
+                    </div>
+                    <div class="form-group">
+                        <label for="fees_paid">Fees Paid</label>
+                        <input type="number" step="1" min="0" id="fees_paid">
+                    </div>
+                </div>
+
+                <h3>Marks</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="mark_math">Math</label>
+                        <input type="number" step="0.1" min="0" max="100" id="mark_math">
+                    </div>
+                    <div class="form-group">
+                        <label for="mark_science">Science</label>
+                        <input type="number" step="0.1" min="0" max="100" id="mark_science">
+                    </div>
+                    <div class="form-group">
+                        <label for="mark_english">English</label>
+                        <input type="number" step="0.1" min="0" max="100" id="mark_english">
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn secondary-btn" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn primary-btn" id="submitBtn">Save Student</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal for Profile View -->
+    <div id="profileModal" class="modal hidden">
+        <div class="modal-content profile-content">
+            <div class="profile-header">
+                <h2 id="profileName">Student Name</h2>
+                <span id="profileRoll" class="badge">Roll No</span>
+            </div>
+            
+            <div class="profile-grid">
+                <div class="profile-card">
+                    <h3>Academic</h3>
+                    <p><strong>Branch:</strong> <span id="profileBranch"></span></p>
+                    <p><strong>Year:</strong> <span id="profileYear"></span></p>
+                    <p><strong>CGPA:</strong> <span id="profileCGPA"></span></p>
+                    <p><strong>Email:</strong> <span id="profileEmail"></span></p>
+                </div>
+
+                <div class="profile-card">
+                    <h3>Attendance</h3>
+                    <div class="progress-bar-container">
+                        <div id="attendanceBar" class="progress-bar"></div>
+                    </div>
+                    <p class="text-right"><span id="profileAttendance">0</span>%</p>
+                </div>
+
+                <div class="profile-card">
+                    <h3>Fees Status</h3>
+                    <p><strong>Total:</strong> $<span id="profileTotalFees">0</span></p>
+                    <p><strong>Paid:</strong> $<span id="profileFeesPaid">0</span></p>
+                    <p><strong>Balance:</strong> $<span id="profileBalance" class="fee-balance">0</span></p>
+                </div>
+
+                <div class="profile-card">
+                    <h3>Marks</h3>
+                    <ul class="marks-list" id="profileMarksList">
+                        <!-- Marks injected here -->
+                    </ul>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn primary-btn" id="closeProfileBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast hidden"></div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
